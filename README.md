@@ -7,11 +7,11 @@ Autores
 Tema do Projeto
     - Sistema de Despesas Domesticas
 
-Ideia Geral
+Ideia Geral - 
     Um programa que ajuda na contabilidade doméstica. 
     Este programa tem como função auxiliar a contabilidade doméstica, um tema pouco explorado pelos cidadãos.
 
-Funcionalidades
+Funcionalidades -
     O programa conta com quatro menus, sendo eles: 
         - Inserir Rendimentos;
         - Inserir Despesas; 
