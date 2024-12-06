@@ -19,7 +19,7 @@ Funcionalidades -
     Este programa tem como função auxiliar a contabilidade doméstica, um tema pouco explorado pelos cidadãos.
 
 ## Funcionalidades
->>>>>>> e43884350c0d86844a5534927ed7aae4db31ef33
+
     O programa conta com quatro menus, sendo eles: 
         - Inserir Rendimentos;
         - Inserir Despesas; 
