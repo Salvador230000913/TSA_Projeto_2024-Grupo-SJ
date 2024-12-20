@@ -12,8 +12,8 @@
       ->create("+351962601852", // to
         array(
           "from" => "+12184838824",
-          "body" => Tens de Pagar a conta da Agua do Mês de Janeiro, valor 26,90€
+          "body" => Tens de Pagar a conta da Agua do Mês de Janeiro, valor 48,90€
         )
       );
-
+      
 print($message->sid);
