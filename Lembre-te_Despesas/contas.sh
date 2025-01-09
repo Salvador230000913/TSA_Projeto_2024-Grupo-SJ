@@ -1,21 +1,11 @@
 #!/bin/bash
 
-# Função para exibir o menu
-exibir_menu() {
-    echo "===== Menu ====="
-    echo "1) Criar nova despesa"
-    echo "2) Listar despesas"
-    echo "3) Agendar envio de lembrete"
-    echo "4) Sair"
-    echo "================"
-}
-
 # Arquivo para salvar as despesas
 DESPESAS_FILE="despesas.txt"
 
 # Configurações do Twilio
 ACCOUNT_SID="ACba4f5d095117f8ba685f9ec3b5ee1c97"
-AUTH_TOKEN="d93ae52e52c336071b76166677aa56e5"
+AUTH_TOKEN="1a5e66d735aa489c3de4c98c727398e7"
 TO_PHONE_NUMBER="+351962601852"
 FROM_PHONE_NUMBER="+12184838824"
 
@@ -31,6 +21,16 @@ enviar_sms() {
 
     MESSAGE_SID=$(echo $RESPONSE | grep -oP '"sid":\s*"\K[^"]+')
     echo "Mensagem enviada com SID: $MESSAGE_SID"
+}
+
+# Função para exibir o menu
+exibir_menu() {
+    echo "===== Menu ====="
+    echo "1) Criar nova despesa"
+    echo "2) Listar despesas"
+    echo "3) Agendar envio de lembrete"
+    echo "4) Sair"
+    echo "================"
 }
 
 # Função para criar uma nova despesa
@@ -71,19 +71,21 @@ agendar_lembrete() {
     # Criar o comando para o crontab
     read -p "Digite a data e hora do lembrete (formato: 'minuto hora dia mês'): " agendamento
 
-    # Criar a entrada no crontab
+    # Adicionar a entrada ao /etc/crontab
     cron_cmd="echo \"$despesa\" | $PWD/contas.sh enviar_sms"
-    (crontab -l 2>/dev/null; echo "$agendamento $cron_cmd") | crontab -
+    echo "$agendamento root bash -c '$cron_cmd'" >> /etc/crontab
 
     echo "Lembrete agendado com sucesso!"
 }
 
-# Função para enviar uma mensagem a partir de uma despesa
-enviar_sms_via_cron() {
+# Checar se o script foi chamado com argumentos
+if [[ "$1" == "enviar_sms" ]]; then
+    # Se o script foi chamado com "enviar_sms", leia a entrada e envie o SMS
     while IFS= read -r linha; do
         enviar_sms "$linha"
     done
-}
+    exit 0
+fi
 
 # Loop principal do menu
 while true; do
@@ -103,9 +105,6 @@ while true; do
         4)
             echo "A sair..."
             break
-            ;;
-        enviar_sms)
-            enviar_sms_via_cron
             ;;
         *)
             echo "Opção inválida. Tente novamente."
