@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Arquivo para salvar as despesas
 DESPESAS_FILE="despesas.txt"
 
 # Configurações do Twilio
@@ -9,7 +8,7 @@ AUTH_TOKEN="1a5e66d735aa489c3de4c98c727398e7"
 TO_PHONE_NUMBER="+351962601852"
 FROM_PHONE_NUMBER="+12184838824"
 
-# Função para enviar SMS usando Twilio
+# Função para enviar SMS
 enviar_sms() {
     local mensagem="$1"
 
@@ -23,7 +22,7 @@ enviar_sms() {
     echo "Mensagem enviada com SID: $MESSAGE_SID"
 }
 
-# Função para exibir o menu
+
 exibir_menu() {
     echo "===== Menu ====="
     echo "1) Criar nova despesa"
@@ -33,18 +32,17 @@ exibir_menu() {
     echo "================"
 }
 
-# Função para criar uma nova despesa
 criar_despesa() {
     read -p "Digite o nome da despesa: " nome
     read -p "Digite o valor (exemplo: 35€): " valor
     read -p "Digite a data limite de pagamento (exemplo: 11/01/2025): " data
 
-    # Salvar no arquivo
+    
     echo "$nome, $valor, pagar até $data" >> $DESPESAS_FILE
     echo "Despesa adicionada com sucesso!"
 }
 
-# Função para listar as despesas
+
 listar_despesas() {
     if [[ -f $DESPESAS_FILE ]]; then
         echo "===== Despesas ====="
@@ -55,39 +53,39 @@ listar_despesas() {
     fi
 }
 
-# Função para agendar envio de lembrete
+
 agendar_lembrete() {
     listar_despesas
 
     read -p "Selecione o número da despesa para agendar o lembrete: " numero
 
-    # Selecionar a linha correspondente
+    
     despesa=$(sed -n "${numero}p" $DESPESAS_FILE)
     if [[ -z $despesa ]]; then
         echo "Número inválido."
         return
     fi
 
-    # Criar o comando para o crontab
+    
     read -p "Digite a data e hora do lembrete (formato: 'minuto hora dia mês'): " agendamento
 
-    # Adicionar a entrada ao /etc/crontab
+    
     cron_cmd="echo \"$despesa\" | $PWD/contas.sh enviar_sms"
     echo "$agendamento root bash -c '$cron_cmd'" >> /etc/crontab
 
     echo "Lembrete agendado com sucesso!"
 }
 
-# Checar se o script foi chamado com argumentos
+
 if [[ "$1" == "enviar_sms" ]]; then
-    # Se o script foi chamado com "enviar_sms", leia a entrada e envie o SMS
+    
     while IFS= read -r linha; do
         enviar_sms "$linha"
     done
     exit 0
 fi
 
-# Loop principal do menu
+
 while true; do
     exibir_menu
     read -p "Escolha uma opção: " opcao
