@@ -4,11 +4,11 @@ DESPESAS_FILE="despesas.txt"
 
 # Configurações do Twilio
 ACCOUNT_SID="ACba4f5d095117f8ba685f9ec3b5ee1c97"
-AUTH_TOKEN="1a5e66d735aa489c3de4c98c727398e7"
+AUTH_TOKEN="1a5e66d735aa489c3de4c98c727398e7" #Verificar se o token ainda está valido, ou se é necessarido dar update
 TO_PHONE_NUMBER="+351962601852"
 FROM_PHONE_NUMBER="+12184838824"
 
-# Função para enviar SMS
+
 enviar_sms() {
     local mensagem="$1"
 
