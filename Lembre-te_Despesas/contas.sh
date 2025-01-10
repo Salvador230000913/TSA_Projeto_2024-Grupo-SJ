@@ -1,6 +1,8 @@
 #!/bin/bash
 
+# DESPESAS_FILE_ALL="despesas.txt"
 DESPESAS_FILE="despesas.txt"
+DESPESAS_FILE_TEMP="despesastemp.txt"
 
 # Configurações do Twilio
 ACCOUNT_SID="ACba4f5d095117f8ba685f9ec3b5ee1c97"
@@ -10,7 +12,7 @@ FROM_PHONE_NUMBER="+12184838824"
 
 
 enviar_sms() {
-    local mensagem="$1"
+    local mensagem="$(cd '/workspaces/TSA_Projeto_2024-Grupo-SJ/Lembre-te_Despesas/temp' && cat $1)"
 
     RESPONSE=$(curl -s -X POST "https://api.twilio.com/2010-04-01/Accounts/$ACCOUNT_SID/Messages.json" \
     --data-urlencode "To=$TO_PHONE_NUMBER" \
@@ -33,13 +35,17 @@ exibir_menu() {
 }
 
 criar_despesa() {
+   
     read -p "Digite o nome da despesa: " nome
     read -p "Digite o valor (exemplo: 35€): " valor
     read -p "Digite a data limite de pagamento (exemplo: 11/01/2025): " data
+    read -p "Digite a entidade: " Entidade
+    read -p "Digite a referencia: " Referencia
 
-    
-    echo "$nome, $valor, pagar até $data" >> $DESPESAS_FILE
-    echo "Despesa adicionada com sucesso!"
+    echo "$nome" >> $DESPESAS_FILE
+    echo -e " Conta $nome\n Data Limite de Pagamento: $data\n Entidade: $Entidade\n Referencia: $Referencia\n Valor $valor " >> temp/${nome}temp.txt
+    echo "${nome}temp.txt" >> $DESPESAS_FILE_TEMP
+    echo "Despesa adicionada com sucesso!" 
 }
 
 
@@ -60,18 +66,18 @@ agendar_lembrete() {
     read -p "Selecione o número da despesa para agendar o lembrete: " numero
 
     
-    despesa=$(sed -n "${numero}p" $DESPESAS_FILE)
+    despesa=$(sed -n "${numero}p" $DESPESAS_FILE_TEMP)
     if [[ -z $despesa ]]; then
         echo "Número inválido."
         return
     fi
 
     
-    read -p "Digite a data e hora do lembrete (formato: 'minuto hora dia mês'): " agendamento
+    read -p "Digite a data e hora do lembrete (formato: 'minuto hora dia mês')(exemplo: 30 10 12 1): " agendamento
 
     
     cron_cmd="echo \"$despesa\" | $PWD/contas.sh enviar_sms"
-    echo "$agendamento root bash -c '$cron_cmd'" >> /etc/crontab
+    echo "$agendamento * root bash -c '$cron_cmd'" >> /etc/crontab
 
     echo "Lembrete agendado com sucesso!"
 }

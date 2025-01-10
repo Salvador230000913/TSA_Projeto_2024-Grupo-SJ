@@ -5,7 +5,7 @@ ACCOUNT_SID="ACba4f5d095117f8ba685f9ec3b5ee1c97"
 AUTH_TOKEN="1a5e66d735aa489c3de4c98c727398e7"
 TO_PHONE_NUMBER="+351962601852"
 FROM_PHONE_NUMBER="+12184838824"
-MESSAGE_BODY="Conta de Luz 1"
+MESSAGE_BODY="Teste Token"
 
 # Enviar SMS usando curl
 RESPONSE=$(curl -s -X POST "https://api.twilio.com/2010-04-01/Accounts/$ACCOUNT_SID/Messages.json" \
